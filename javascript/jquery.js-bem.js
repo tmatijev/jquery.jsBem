@@ -1,6 +1,6 @@
 ;( function( $ ){
 	$.fn.jsBem = function( options ) {
-		var defaults = {
+        var defaults = {
 			bemESeparator: "__",
             bemMSeparator: "--",
             bemBlock: "",
@@ -47,8 +47,6 @@
             },
 
             bemClassController: function( $obj ) {
-                var that    = this;
-
                 if( this.isBemElement($obj.classes[0]) ) {
                     $obj.classes = $obj.classes[0].split(this.opt.bemESeparator).join(' ');
                     this.setFinalBemClass($obj, this.opt.bemESeparator);
