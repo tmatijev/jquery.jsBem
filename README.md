@@ -198,6 +198,7 @@ $(function () {
         bemBlock: 'hand',
         modifierClass: 'mod'
     });
+    });
 });
 ```
 
@@ -209,4 +210,3 @@ $(function () {
 * __modifierClass__ - Modifier name which will be appended
 
 You can use block inside block just as in example. Important thing is that each block has it's own JavaScript init.
-
