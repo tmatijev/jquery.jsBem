@@ -54,10 +54,40 @@ So, person would share default styles for the hand & leg and just add different 
 </div>
 ```
 
-But this is not good enough if we want to follow BEM rules. CSS output for tall person hand would be:
+But this is not good enough if we want to follow BEM rules. Before showing SCSS code, I will just mention that I am using one handy mixin created for BEM and founded on [CSS Tricks](https://css-tricks.com/snippets/sass/bem-mixins/):
+
+```scss
+/// Block Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin element($element) {
+    &__#{$element} {
+        @content;
+    }
+}
+
+/// Block Modifier
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin modifier($modifier) {
+    &--#{$modifier} {
+        @content;
+    }
+}
+```
+
+Knowing that, example follows:
 
 ```scss
 .person {
-    
+    @include m('tall') {
+        .person__hand {
+            font-size: 2rem;
+        }
+        
+        .person__leg {
+            font-size: 4rem;
+        }
+    }
 }
 ```
