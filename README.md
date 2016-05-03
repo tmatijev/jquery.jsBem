@@ -91,3 +91,113 @@ Knowing that, example follows:
     }
 }
 ```
+
+This can be achieved even more better, using parent root:
+
+```scss
+.person {
+    $root: &;
+    
+    @include m('tall') {
+        #{$root}__hand {
+            font-size: 2rem;
+        }
+        
+        #{$root}__leg {
+            font-size: 4rem;
+        }
+    }
+}
+```
+
+Output would look like this:
+
+```css
+.person--tall .person__hand {
+    font-size: 2rem;
+}
+.person--tall .person__leg {
+    font-size: 4rem;
+}
+```
+
+But, I wanted to avoid all of this and use BEM without this fixes ... As you can see, BEM is all about one selector, and this is not the case.
+
+## Main goal ##
+
+Goal was to write natural / default BEM code and apply it only when classes are added. That would look like this:
+
+```scss
+.person {
+    @include m('tall') {
+        @include e('hand') {
+            font-size: 2rem;
+        }
+        
+        @include e('leg') {
+            font-size: 4rem;
+        }
+    }
+}
+```
+
+Which will have the following output:
+ 
+```css
+.person--tall__hand {
+    font-size: 2rem;
+}
+.person--tall__leg {
+    font-size: 4rem;
+}
+```
+
+## Solution / Configuration ##
+
+Example HTML code used in this project:
+
+```html
+<div class="person" data-bem-block="person">
+    <h1>Person title</h1>
+    <div class="person__hand bla-class classTest" data-bem="person">
+        <h2 class="person__hand--left" data-bem="person">Left hand</h2>
+        <h2 class="person__hand--right" data-bem="person">Right hand</h2>
+    </div>
+    
+    <div class="person__leg" data-bem="person">
+        <h2 class="person__leg--left" data-bem="person">Left leg</h2>
+        <h2 class="person__leg--right" data-bem="person">Right leg</h2>
+    </div>
+    
+    <div class="person--blind" data-bem="person">
+        <div class="hand" data-bem-block="hand">
+            <div class="hand__left" data-bem="hand">
+                <div class="hand__left--open" data-bem="hand"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="person__hand__finger" data-bem="person"></div>
+</div>
+```
+
+JavaScript init and configuration:
+
+```javascript
+$(function () {
+    $('body').jsBem({
+        bemESeparator: '__',
+        bemMSeparator: '--',
+        bemBlock: 'person',
+        modifierClass: 'mod'
+    }); 
+});
+```
+
+## Options ##
+
+* __bemESeparator__ - BEM Element separator. You don't have to use default double underscore as BEM officialy proposed.
+* __bemMSeparator__ - BEM Modifier separator. You can use either single underscore (officialy) or any other character. I am using two hyphens as Harry Roberts proposed.
+* __bemBlock__ - BEM Block which will be targeted
+* __modifierClass__ - Modifier name which will be appended
+
