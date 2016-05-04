@@ -1,22 +1,22 @@
 ;( function( $ ){
 	$.fn.jsBem = function( options ) {
         var defaults = {
-			bemESeparator: "__",
+	    bemESeparator: "__",
             bemMSeparator: "--",
             bemBlock: "",
             modifierClass: ""
 		},
 
 		jsBem = {
-			opt: {},
+	    opt: {},
             $blocks: {},
             $bems: {},
             $bemClassElements: {},
             $finalBems: {},
-			init: function () {
-				jsBem.opt = $.extend(defaults, options);
-				jsBem.setBlockObject();
-			},
+	    init: function () {
+	        jsBem.opt = $.extend(defaults, options);
+	        jsBem.setBlockObject();
+	    },
 
             setBlockObject: function() {
                 this.$blocks = $( '*[data-bem-block="' + this.opt.bemBlock + '"]' );
@@ -74,7 +74,6 @@
             },
             
             setFinalBemClass: function ($obj, bemClass) {
-                var that            = this;
                 var splitClasses    = $obj.classes.split(' ');
                 var joinClasses     = splitClasses.join(this.opt.bemMSeparator + this.opt.modifierClass + bemClass);
                 var classesLenght   = splitClasses.length;    
