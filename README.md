@@ -5,7 +5,7 @@ This jQuery plugin allows you to use BEM properly with JavaScript class addition
 
 ## Issue Explanation ##
 
-I will take a quick example and try to explain why in the first place I needed this plugin ... Often you need to add a class to HTML element after certain event / interaction (click, hover, focus etc.). If you are not using BEM, these things are very easy. But, if you want to use BEM properly, this could be really pain.
+I will take a quick example and try to explain why in the first place I needed this plugin ... Often you need to add a class to HTML element after certain event / interaction (click, hover, focus etc.). If you are not using BEM, these things are very easy. But, if you want to use BEM properly, this could be hard.
 
 Let's take a look at this HTML code:
 
@@ -26,7 +26,7 @@ Let's take a look at this HTML code:
 
 Use case is that if button is clicked, CSS class should be added on person and add BEM modifier. We want to have 2 different classes - tall, short and medium and each one of them will have different styles for each BEM element (hand & leg). But, if nothing is clicked, default sizes will be applied (in other words, class without modifier in this case is same as "default" or "average").
 
-So, problem with BEM is that you need to have pre-entered CSS values all the time. If we want person to be "tall", HTML would look like this:
+So, problem with BEM is that you need to have pre-entered CSS classes all the time. If we want person to be "tall", HTML would look like this:
 
 ```html
 <div class="person person--tall">
@@ -40,7 +40,7 @@ So, problem with BEM is that you need to have pre-entered CSS values all the tim
 </div>
 ```
 
-So, person would share default styles for the hand & leg and just add different size for tall modifier. Problem is, that person--tall__hand shouldn't exist in the HTML at this point because CSS styles will applied before click. If we click on the button and trigger "tall" class, modifier will be added like this:
+So, person would share default styles for the hand & leg and just add different size for tall modifier. Problem is, that __person--tall__hand__ class shouldn't exist in the HTML at this point because CSS styles will applied before click. If we click on the button and trigger "tall" class, modifier will be added like this:
 
 ```html
 <div class="person person--tall">
@@ -92,7 +92,7 @@ Knowing that, example follows:
 }
 ```
 
-This can be achieved even more better, using parent root:
+This can be achieved even better, using parent root:
 
 ```scss
 .person {
