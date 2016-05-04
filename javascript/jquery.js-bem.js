@@ -20,7 +20,7 @@
 
             setBlockObject: function() {
                 this.$blocks = $( '*[data-bem-block="' + this.opt.bemBlock + '"]' );
-                this.$bems  = this.$blocks.find( '*[data-bem="' + this.opt.bemBlock + '"]' );
+                this.$bems   = $( '*[data-bem="' + this.opt.bemBlock + '"]' );
 
                 if ( !this.$bems.length ) {
                     console.log( "No BEM elements found. Please re-check your code." );
