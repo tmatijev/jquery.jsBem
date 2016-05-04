@@ -202,6 +202,8 @@ $(function () {
 });
 ```
 
+Note that you can use nested blocks but with different data attribute name.
+
 ## Options ##
 
 * __bemESeparator__ - BEM Element separator. You don't have to use default double underscore as BEM officialy proposed.

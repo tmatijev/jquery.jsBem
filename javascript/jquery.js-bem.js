@@ -9,7 +9,7 @@
 
 		jsBem = {
 			opt: {},
-            $block: {},
+            $blocks: {},
             $bems: {},
             $bemClassElements: {},
             $finalBems: {},
@@ -19,31 +19,40 @@
 			},
 
             setBlockObject: function() {
-                this.$block = $( '*[data-bem-block="' + this.opt.bemBlock + '"]' );
-                this.$bems  = this.$block.find( '*[data-bem="' + this.opt.bemBlock + '"]' );
+                this.$blocks = $( '*[data-bem-block="' + this.opt.bemBlock + '"]' );
+                this.$bems  = this.$blocks.find( '*[data-bem="' + this.opt.bemBlock + '"]' );
 
                 if ( !this.$bems.length ) {
                     console.log( "No BEM elements found. Please re-check your code." );
                     return false;
                 }
 
+                this.setBemBlocks();
                 this.setBemElements();
+            },
+            
+            setBemBlocks: function() {
+                var that = this;
+                
+                for( var i = 0; i < this.$blocks.length; i++ ) {
+                    $(this.$blocks[i]).addClass(this.opt.bemBlock + this.opt.bemMSeparator + this.opt.modifierClass);
+                }
             },
 
             setBemElements: function() {
                 var that = this;
-
-                this.opt.$bemClassElements = $.map( this.$bems, function( el ){
-                    var $el      = $( el );
-                    var elClass  = $el.attr( "class" );
-
-                    if ( that.isBemElement( elClass ) || that.isBemModifier( elClass ) ) {
-                        that.bemClassController({
+                
+                for( var i = 0; i < this.$bems.length; i++ ) {
+                    var $el     = $(this.$bems[i]);
+                    var elClass = $el.attr( "class" );
+                    
+                    if ( this.isBemElement( elClass ) || this.isBemModifier( elClass ) ) {
+                        this.bemClassController({
                             $el: $el,
                             classes: elClass.split( " " )
                         });
                     }
-                });
+                }
             },
 
             bemClassController: function( $obj ) {
@@ -68,11 +77,11 @@
                 var that            = this;
                 var splitClasses    = $obj.classes.split(' ');
                 var joinClasses     = splitClasses.join(this.opt.bemMSeparator + this.opt.modifierClass + bemClass);
+                var classesLenght   = splitClasses.length;    
+                var finalClass      = '';
                 
-                var finalClass = '';
-                
-                for( var i = 0; i < splitClasses.length; i++ ) {
-                    if( i == splitClasses.length - 1 && i < 2 ) {
+                for( var i = 0; i < classesLenght; i++ ) {
+                    if( i == classesLenght - 1 && i < 2 ) {
                         finalClass+= splitClasses[i];
                     }else if( i < 1 ){
                         finalClass+= splitClasses[i] + this.opt.bemMSeparator + this.opt.modifierClass + bemClass;    
