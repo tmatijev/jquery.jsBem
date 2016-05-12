@@ -27,18 +27,9 @@
                     return false;
                 }
 
-                this.setBemBlocks();
                 this.setBemElements();
             },
             
-            setBemBlocks: function() {
-                var that = this;
-                
-                for( var i = 0; i < this.$blocks.length; i++ ) {
-                    $(this.$blocks[i]).addClass(this.opt.bemBlock + this.opt.bemMSeparator + this.opt.modifierClass);
-                }
-            },
-
             setBemElements: function() {
                 var that = this;
                 
