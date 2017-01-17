@@ -30,10 +30,10 @@
                 this.setBemBlocks();
                 this.setBemElements();
             },
-            
+
             setBemBlocks: function() {
                 var that = this;
-                
+
                 for( var i = 0; i < this.$blocks.length; i++ ) {
                     $(this.$blocks[i]).addClass(this.opt.bemBlock + this.opt.bemMSeparator + this.opt.modifierClass);
                 }
@@ -41,11 +41,11 @@
 
             setBemElements: function() {
                 var that = this;
-                
+
                 for( var i = 0; i < this.$bems.length; i++ ) {
                     var $el     = $(this.$bems[i]);
                     var elClass = $el.attr( "class" );
-                    
+
                     if ( this.isBemElement( elClass ) || this.isBemModifier( elClass ) ) {
                         this.bemClassController({
                             $el: $el,
@@ -72,18 +72,16 @@
             isBemModifier: function( s ){
                 return s.split( this.opt.bemMSeparator ).length > 1;
             },
-            
+
             setFinalBemClass: function ($obj, bemClass) {
                 var splitClasses    = $obj.classes.split(' ');
-                var joinClasses     = splitClasses.join(this.opt.bemMSeparator + this.opt.modifierClass + bemClass);
-                var classesLenght   = splitClasses.length;    
                 var finalClass      = '';
-                
+
                 for( var i = 0; i < classesLenght; i++ ) {
                     if( i == classesLenght - 1 && i < 2 ) {
                         finalClass+= splitClasses[i];
                     }else if( i < 1 ){
-                        finalClass+= splitClasses[i] + this.opt.bemMSeparator + this.opt.modifierClass + bemClass;    
+                        finalClass+= splitClasses[i] + this.opt.bemMSeparator + this.opt.modifierClass + bemClass;
                     }else if( i > 1 ) {
                         finalClass+= splitClasses[i];
                         console.log("Please try to keep your BEM elements with less nesting. You have 2 BEM Elements for this block: ", $obj.$el);
@@ -91,15 +89,27 @@
                         finalClass+= splitClasses[i] + bemClass;
                     }
                 }
-                
+
                 $obj.$el.addClass(finalClass);
             }
 		};
-        
+
         $(function(){
             jsBem.init();
         });
 
 		return this;
 	}
+    for( var i = 0; i < classesLenght; i++ ) {
+        if( i == classesLenght - 1 && i < 2 ) {
+            finalClass+= splitClasses[i];
+        }else if( i < 1 ){
+            finalClass+= splitClasses[i] + this.opt.bemMSeparator + this.opt.modifierClass + bemClass;
+        }else if( i > 1 ) {
+            finalClass+= splitClasses[i];
+            console.log("Please try to keep your BEM elements with less nesting. You have 2 BEM Elements for this block: ", $obj.$el);
+        }else{
+            finalClass+= splitClasses[i] + bemClass;
+        }
+    }
 }(jQuery));
