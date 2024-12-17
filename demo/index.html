@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEM Class Utils Demo</title>
+    <style>
+        .person { padding: 20px; border: 1px solid #ccc; margin: 20px; }
+        .person--mod { background: #f0f0f0; }
+        .hand { padding: 10px; border: 1px dashed #999; }
+        .hand--mod { background: #e0e0e0; }
+    </style>
+</head>
+<body>
+    <h1>BEM Demo</h1>
+    
+    <div class="person" data-bem-block="person">
+        <div class="person__hand" data-bem="person">
+            <h2 class="person__hand--left" data-bem="person">Left hand</h2>
+        </div>
+        <div class="person--blind" data-bem="person">
+            <div class="hand" data-bem-block="hand">
+                <div class="hand__left" data-bem="hand"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="results">
+        <h2>Test Results:</h2>
+        <ul id="testResults"></ul>
+    </div>
+
+    <script type="module">
+        import { initBem } from '../dist/index.esm.js';
+        
+        console.log('Running tests...');
+
+        // Initialize BEM blocks
+        const personBem = initBem({
+            bemBlock: 'person',
+            modifierClass: 'mod'
+        });
+
+        const handBem = initBem({
+            bemBlock: 'hand',
+            modifierClass: 'mod'
+        });
+
+        // Test functions
+        function runTests() {
+            const results = [];
+            
+            const personElements = document.querySelectorAll('[data-bem="person"]');
+            const handElements = document.querySelectorAll('[data-bem="hand"]');
+
+            results.push({
+                name: 'Person elements have mod class',
+                passed: personElements[0].classList.contains('person--mod')
+            });
+
+            results.push({
+                name: 'Hand elements have mod class',
+                passed: handElements[0].classList.contains('hand--mod')
+            });
+
+            // Display results
+            const ul = document.getElementById('testResults');
+            results.forEach(result => {
+                const li = document.createElement('li');
+                li.textContent = `${result.passed ? '✅' : '❌'} ${result.name}`;
+                li.style.color = result.passed ? 'green' : 'red';
+                ul.appendChild(li);
+            });
+        }
+
+        runTests();
+    </script>
+</body>
+</html> 

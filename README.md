@@ -1,214 +1,93 @@
-jquery.jsBem
-==========================
+# Modern BEM Class Manager 🎨
 
-This jQuery plugin allows you to use BEM properly with JavaScript class addition.
+A lightweight, TypeScript-first utility for managing BEM classes in modern web applications.
 
-## Issue Explanation ##
+[![npm version](https://img.shields.io/npm/v/modern-bem-class-manager.svg)](https://www.npmjs.com/package/modern-bem-class-manager)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/modern-bem-class-manager)](https://bundlephobia.com/package/modern-bem-class-manager)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-I will take a quick example and try to explain why in the first place I needed this plugin ... Often you need to add a class to HTML element after certain event / interaction (click, hover, focus etc.). If you are not using BEM, these things are very easy. But, if you want to use BEM properly, this could be hard.
+## ✨ Features
 
-Let's take a look at this HTML code:
+- 🚀 Modern TypeScript implementation
+- 🎯 Zero dependencies
+- 🔍 Smart BEM class detection
+- 🛠️ Flexible modifier management
+- ⚡ Tree-shakeable ESM support
+- 🎨 Customizable separators
 
-```html
-<div class="person">
-    <div class="person__hand">
-        Person hand
+## 📦 Installation
+
+npm install modern-bem-class-manager
+# or
+yarn add modern-bem-class-manager
+# or
+pnpm add modern-bem-class-manager
+
+## 🚀 Quick Start
+
+```typescript
+import { createBEM } from 'modern-bem-class-manager';
+
+// Create a BEM instance
+const bem = createBEM('card');
+
+// Use it in your components
+const className = bem({
+  element: 'title',
+  modifiers: ['large', { highlighted: true }]
+});
+// Result: 'card__title card__title--large card__title--highlighted'
+```
+
+## 🎯 Usage with React
+
+```typescript
+import { createBEM } from 'modern-bem-class-manager';
+
+const Card = ({ isHighlighted, size = 'medium' }) => {
+  const bem = createBEM('card');
+  
+  return (
+    <div className={bem({ modifiers: [{ highlighted: isHighlighted }] })}>
+      <h2 className={bem({ element: 'title', modifiers: [size] })}>
+        Hello World
+      </h2>
+      <p className={bem({ element: 'content' })}>
+        Content goes here
+      </p>
     </div>
-    
-    <div class="person__leg">
-        Persona leg
-    </div>
-</div>
-
-<button class="js-trigger" data-prop="tall">Trigger class <strong>Tall</strong>!</button>
-<button class="js-trigger" data-prop="short">Trigger class <strong>Short</strong>!</button>
+  );
+};
 ```
 
-Use case is that if button is clicked, CSS class should be added on person and add BEM modifier. We want to have 2 different classes - tall, short and medium and each one of them will have different styles for each BEM element (hand & leg). But, if nothing is clicked, default sizes will be applied (in other words, class without modifier in this case is same as "default" or "average").
+## ⚙️ Configuration
 
-So, problem with BEM is that you need to have pre-entered CSS classes all the time. If we want person to be "tall", HTML would look like this:
-
-```html
-<div class="person person--tall">
-    <div class="person__hand person--tall__hand">
-        Person hand
-    </div>
-    
-    <div class="person__leg person--tall__leg">
-        Persona leg
-    </div>
-</div>
-```
-
-So, person would share default styles for the hand & leg and just add different size for tall modifier. Problem is, that __person--tall__hand__ class shouldn't exist in the HTML at this point because CSS styles will applied before click. If we click on the button and trigger "tall" class, modifier will be added like this:
-
-```html
-<div class="person person--tall">
-    <div class="person__hand">
-        Person hand
-    </div>
-    
-    <div class="person__leg">
-        Persona leg
-    </div>
-</div>
-```
-
-But this is not good enough if we want to follow BEM rules. Before showing SCSS code, I will just mention that I am using one handy mixin created for BEM and founded on [CSS Tricks](https://css-tricks.com/snippets/sass/bem-mixins/):
-
-```scss
-/// Block Element
-/// @access public
-/// @param {String} $element - Element's name
-@mixin element($element) {
-    &__#{$element} {
-        @content;
-    }
-}
-
-/// Block Modifier
-/// @access public
-/// @param {String} $modifier - Modifier's name
-@mixin modifier($modifier) {
-    &--#{$modifier} {
-        @content;
-    }
-}
-```
-
-Knowing that, example follows:
-
-```scss
-.person {
-    @include m('tall') {
-        .person__hand {
-            font-size: 2rem;
-        }
-        
-        .person__leg {
-            font-size: 4rem;
-        }
-    }
-}
-```
-
-This can be achieved even better, using parent root:
-
-```scss
-.person {
-    $root: &;
-    
-    @include m('tall') {
-        #{$root}__hand {
-            font-size: 2rem;
-        }
-        
-        #{$root}__leg {
-            font-size: 4rem;
-        }
-    }
-}
-```
-
-Output would look like this:
-
-```css
-.person--tall .person__hand {
-    font-size: 2rem;
-}
-.person--tall .person__leg {
-    font-size: 4rem;
-}
-```
-
-But, I wanted to avoid all of this and use BEM without this fixes ... As you can see, BEM is all about one selector, and this is not the case.
-
-## Main goal ##
-
-Goal was to write natural / default BEM code and apply it only when classes are added. That would look like this:
-
-```scss
-.person {
-    @include m('tall') {
-        @include e('hand') {
-            font-size: 2rem;
-        }
-        
-        @include e('leg') {
-            font-size: 4rem;
-        }
-    }
-}
-```
-
-Which will have the following output:
- 
-```css
-.person--tall__hand {
-    font-size: 2rem;
-}
-.person--tall__leg {
-    font-size: 4rem;
-}
-```
-
-## Solution / Configuration ##
-
-Example HTML code used in this project:
-
-```html
-<div class="person" data-bem-block="person">
-    <h1>Person title</h1>
-    <div class="person__hand bla-class classTest" data-bem="person">
-        <h2 class="person__hand--left" data-bem="person">Left hand</h2>
-        <h2 class="person__hand--right" data-bem="person">Right hand</h2>
-    </div>
-    
-    <div class="person__leg" data-bem="person">
-        <h2 class="person__leg--left" data-bem="person">Left leg</h2>
-        <h2 class="person__leg--right" data-bem="person">Right leg</h2>
-    </div>
-    
-    <div class="person--blind" data-bem="person">
-        <div class="hand" data-bem-block="hand">
-            <div class="hand__left" data-bem="hand">
-                <div class="hand__left--open" data-bem="hand"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="person__hand__finger" data-bem="person"></div>
-</div>
-```
-
-JavaScript init and configuration:
-
-```javascript
-$(function () {
-    $('body').jsBem({
-        bemESeparator: '__',
-        bemMSeparator: '--',
-        bemBlock: 'person',
-        modifierClass: 'mod'
-    });
-    
-    $('body').jsBem({
-        bemESeparator: '__',
-        bemMSeparator: '--',
-        bemBlock: 'hand',
-        modifierClass: 'mod'
-    });
-    });
+```typescript
+const bem = createBEM('block', {
+  elementSeparator: '__',  // Default
+  modifierSeparator: '--', // Default
+  strict: true            // Enables strict mode
 });
 ```
 
-Note that you can use nested blocks but with different data attribute name.
+## 🔧 API Reference
 
-## Options ##
+### `createBEM(block: string, options?: BEMOptions)`
 
-* __bemESeparator__ - BEM Element separator. You don't have to use default double underscore as BEM officialy proposed.
-* __bemMSeparator__ - BEM Modifier separator. You can use either single underscore (officialy) or any other character. I am using two hyphens as Harry Roberts proposed.
-* __bemBlock__ - BEM Block which will be targeted
-* __modifierClass__ - Modifier name which will be appended
+Creates a new BEM instance for the given block name.
 
-You can use block inside block just as in example. Important thing is that each block has it's own JavaScript init.
+#### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `elementSeparator` | `string` | `'__'` | Separator between block and element |
+| `modifierSeparator` | `string` | `'--'` | Separator for modifiers |
+| `strict` | `boolean` | `false` | Enables strict mode validation |
+
+## 📝 License
+
+MIT © [Your Name]
+
+---
+
+<p align="center">Made with ❤️ for modern web development</p>
